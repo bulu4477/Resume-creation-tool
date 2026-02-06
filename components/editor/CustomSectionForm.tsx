@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { useResumeStore } from '@/store/resumeStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
+import RichTextEditor from './RichTextEditorWrapper';
 import { Trash2 } from 'lucide-react';
 
 interface CustomSectionFormProps {
@@ -42,14 +42,13 @@ export function CustomSectionForm({ sectionId }: CustomSectionFormProps) {
       </div>
       <div>
         <Label>模块内容</Label>
-        <Textarea
-          value={content}
-          onChange={(e) => {
-            setContent(e.target.value);
+        <RichTextEditor
+          content={content}
+          onChange={(html) => {
+            setContent(html);
             handleUpdate();
           }}
-          placeholder="输入模块内容，支持多行文本..."
-          rows={6}
+          placeholder="输入模块内容，支持富文本格式..."
         />
       </div>
       <div className="flex justify-end">

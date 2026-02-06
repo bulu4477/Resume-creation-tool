@@ -45,7 +45,7 @@ export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps)
         <h2 className="text-lg font-bold mb-3 uppercase tracking-wider" style={{ color: template.primaryColor }}>
           个人简介
         </h2>
-        <p className="text-gray-700 leading-relaxed">{personalInfo.summary}</p>
+        <div className="text-gray-700 leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: personalInfo.summary }} />
       </section>
     );
 
@@ -64,7 +64,10 @@ export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps)
               </span>
             </div>
             <p className="italic text-gray-700 mb-2">{exp.company || '公司'}</p>
-            <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">{exp.description}</p>
+            <div 
+              className="text-gray-600 text-sm leading-relaxed prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: exp.description }}
+            />
           </div>
         ))
       ) : (
@@ -122,7 +125,7 @@ export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps)
         projects.map((project) => (
           <div key={project.id} className="mb-4" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
             <h3 className="font-bold">{project.name || '项目名称'}</h3>
-            <p className="text-gray-600 text-sm mb-1">{project.description}</p>
+            <div className="text-gray-600 text-sm mb-1 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.description }} />
             <p className="text-sm text-gray-500">
               技术栈: {project.technologies.join(', ')}
             </p>
@@ -144,7 +147,7 @@ export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps)
           {customSection.title}
         </h2>
         {customSection.content ? (
-          <p className="text-gray-600 text-sm whitespace-pre-line">{customSection.content}</p>
+          <div className="text-gray-600 text-sm prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: customSection.content }} />
         ) : (
           <p className="text-gray-400 text-sm italic">暂无内容</p>
         )}

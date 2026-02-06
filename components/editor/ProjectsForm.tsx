@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import { useResumeStore } from '@/store/resumeStore';
 import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import RichTextEditor from './RichTextEditorWrapper';
 import { createEmptyProject } from '@/lib/data';
 import { GripVertical, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -61,7 +61,10 @@ export function ProjectsForm() {
           </div>
 
           {expandedId === item.id && (
-            <div className="mt-4 space-y-4 pt-4 border-t">
+            <div 
+              className="mt-4 space-y-4 pt-4 border-t"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="space-y-2">
                 <Label>项目名称</Label>
                 <Input
@@ -99,13 +102,12 @@ export function ProjectsForm() {
 
               <div className="space-y-2">
                 <Label>项目描述</Label>
-                <Textarea
-                  value={item.description}
-                  onChange={(e) =>
-                    updateProject(item.id, { description: e.target.value })
+                <RichTextEditor
+                  content={item.description}
+                  onChange={(html) =>
+                    updateProject(item.id, { description: html })
                   }
                   placeholder="描述项目背景、你的职责和取得的成果..."
-                  rows={4}
                 />
               </div>
             </div>

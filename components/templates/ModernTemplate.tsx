@@ -25,7 +25,10 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
       <h1 className="text-3xl font-bold mb-2" style={{ color: template.primaryColor }}>
         {personalInfo.fullName || '姓名'}
       </h1>
-      <p className="text-lg text-gray-600 mb-4">{personalInfo.summary || '个人简介'}</p>
+      <div 
+        className="text-lg text-gray-600 mb-4 prose prose-sm max-w-none"
+        dangerouslySetInnerHTML={{ __html: personalInfo.summary || '<p>个人简介</p>' }}
+      />
 
       <div className="flex flex-wrap gap-4 text-sm text-gray-600">
         {personalInfo.email && (
@@ -83,7 +86,10 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
               </span>
             </div>
             <p className="text-gray-700 font-medium mb-2">{exp.company || '公司'}</p>
-            <p className="text-gray-600 text-sm whitespace-pre-line">{exp.description}</p>
+            <div 
+              className="text-gray-600 text-sm prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: exp.description }}
+            />
           </div>
         ))
       ) : (
@@ -104,7 +110,7 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
               <div>
                 <h3 className="font-semibold">{edu.school || '学校'}</h3>
                 <p className="text-gray-700">{edu.degree} {edu.field && `- ${edu.field}`}</p>
-                {edu.description && <p className="text-gray-600 text-sm mt-1">{edu.description}</p>}
+                {edu.description && <div className="text-gray-600 text-sm mt-1 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: edu.description }} />}
               </div>
               <span className="text-sm text-gray-500">
                 {formatDateRange(edu.startDate, edu.endDate, edu.current)}
@@ -157,7 +163,7 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
                 </a>
               )}
             </div>
-            <p className="text-gray-600 text-sm mb-2">{project.description}</p>
+            <div className="text-gray-600 text-sm mb-2 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.description }} />
             <div className="flex flex-wrap gap-1">
               {project.technologies.map((tech, idx) => (
                 <span key={idx} className="text-xs text-gray-500">
@@ -183,7 +189,7 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
           {customSection.title}
         </h2>
         {customSection.content ? (
-          <p className="text-gray-600 text-sm whitespace-pre-line">{customSection.content}</p>
+          <div className="text-gray-600 text-sm prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: customSection.content }} />
         ) : (
           <p className="text-gray-400 text-sm italic">暂无内容</p>
         )}

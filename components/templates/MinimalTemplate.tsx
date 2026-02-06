@@ -38,7 +38,7 @@ export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps)
   const renderSummary = () =>
     personalInfo.summary && (
       <section className="mb-8">
-        <p className="text-gray-700 leading-relaxed">{personalInfo.summary}</p>
+        <div className="text-gray-700 leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: personalInfo.summary }} />
       </section>
     );
 
@@ -97,7 +97,10 @@ export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps)
               </span>
             </div>
             <p className="text-sm text-gray-600 mb-2">{exp.company || '公司'}</p>
-            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{exp.description}</p>
+            <div 
+              className="text-sm text-gray-700 leading-relaxed prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: exp.description }}
+            />
           </div>
         ))
       ) : (
@@ -115,7 +118,7 @@ export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps)
         projects.map((project) => (
           <div key={project.id} className="mb-4" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
             <h3 className="font-semibold mb-1">{project.name || '项目名称'}</h3>
-            <p className="text-sm text-gray-600 mb-1">{project.description}</p>
+            <div className="text-sm text-gray-600 mb-1 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.description }} />
             <p className="text-xs text-gray-400">
               {project.technologies.join(' · ')}
             </p>
@@ -137,7 +140,7 @@ export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps)
           {customSection.title}
         </h2>
         {customSection.content ? (
-          <p className="text-gray-600 text-sm whitespace-pre-line">{customSection.content}</p>
+          <div className="text-gray-600 text-sm prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: customSection.content }} />
         ) : (
           <p className="text-gray-400 text-sm italic">暂无内容</p>
         )}

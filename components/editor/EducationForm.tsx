@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import { useResumeStore } from '@/store/resumeStore';
 import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Button } from '@/components/ui/Button';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { Card } from '@/components/ui/Card';
+import RichTextEditor from './RichTextEditorWrapper';
 import { createEmptyEducation } from '@/lib/data';
 import { GripVertical, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { formatDateRange } from '@/lib/utils';
@@ -66,7 +66,10 @@ export function EducationForm() {
           </div>
 
           {expandedId === item.id && (
-            <div className="mt-4 space-y-4 pt-4 border-t">
+            <div 
+              className="mt-4 space-y-4 pt-4 border-t"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="space-y-2">
                 <Label>学校名称</Label>
                 <Input
@@ -138,13 +141,12 @@ export function EducationForm() {
 
               <div className="space-y-2">
                 <Label>描述（可选）</Label>
-                <Textarea
-                  value={item.description}
-                  onChange={(e) =>
-                    updateEducation(item.id, { description: e.target.value })
+                <RichTextEditor
+                  content={item.description || ''}
+                  onChange={(html) =>
+                    updateEducation(item.id, { description: html })
                   }
                   placeholder="描述你的学习经历、成绩、获奖情况等..."
-                  rows={3}
                 />
               </div>
             </div>

@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import { useResumeStore } from '@/store/resumeStore';
 import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
 import { Button } from '@/components/ui/Button';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { Card } from '@/components/ui/Card';
+import RichTextEditor from './RichTextEditorWrapper';
 import { createEmptyWorkExperience } from '@/lib/data';
 import { GripVertical, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { formatDateRange } from '@/lib/utils';
@@ -66,7 +66,10 @@ export function WorkExperienceForm() {
           </div>
 
           {expandedId === item.id && (
-            <div className="mt-4 space-y-4 pt-4 border-t">
+            <div 
+              className="mt-4 space-y-4 pt-4 border-t"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>公司名称</Label>
@@ -127,13 +130,12 @@ export function WorkExperienceForm() {
 
               <div className="space-y-2">
                 <Label>工作描述</Label>
-                <Textarea
-                  value={item.description}
-                  onChange={(e) =>
-                    updateWorkExperience(item.id, { description: e.target.value })
+                <RichTextEditor
+                  content={item.description}
+                  onChange={(html) =>
+                    updateWorkExperience(item.id, { description: html })
                   }
                   placeholder="描述你的工作职责和成就..."
-                  rows={4}
                 />
               </div>
             </div>

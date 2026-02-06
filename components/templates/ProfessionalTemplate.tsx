@@ -26,7 +26,7 @@ export function ProfessionalTemplate({ data, template, sectionOrder }: TemplateP
       style={{ backgroundColor: template.primaryColor }}
     >
       <h1 className="text-4xl font-bold mb-3">{personalInfo.fullName || '姓名'}</h1>
-      <p className="text-lg opacity-90 mb-4">{personalInfo.summary || '个人简介'}</p>
+      <div className="text-lg opacity-90 mb-4 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: personalInfo.summary || '<p>个人简介</p>' }} />
 
       <div className="flex flex-wrap gap-4 text-sm opacity-80">
         {personalInfo.email && (
@@ -76,7 +76,10 @@ export function ProfessionalTemplate({ data, template, sectionOrder }: TemplateP
                 {formatDateRange(exp.startDate, exp.endDate, exp.current)}
               </span>
             </div>
-            <p className="text-gray-600 text-sm whitespace-pre-line">{exp.description}</p>
+            <div 
+              className="text-gray-600 text-sm prose prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: exp.description }}
+            />
           </div>
         ))
       ) : (
@@ -97,7 +100,7 @@ export function ProfessionalTemplate({ data, template, sectionOrder }: TemplateP
               <div>
                 <h3 className="font-bold" style={{ color: template.primaryColor }}>{edu.school || '学校'}</h3>
                 <p className="text-gray-700">{edu.degree}{edu.field && ` - ${edu.field}`}</p>
-                {edu.description && <p className="text-gray-600 text-sm mt-1">{edu.description}</p>}
+                {edu.description && <div className="text-gray-600 text-sm mt-1 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: edu.description }} />}
               </div>
               <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded">
                 {formatDateRange(edu.startDate, edu.endDate, edu.current)}
@@ -140,7 +143,7 @@ export function ProfessionalTemplate({ data, template, sectionOrder }: TemplateP
         projects.map((project) => (
           <div key={project.id} className="mb-4" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
             <h3 className="font-semibold" style={{ color: template.primaryColor }}>{project.name || '项目名称'}</h3>
-            <p className="text-sm text-gray-600 mb-1">{project.description}</p>
+            <div className="text-sm text-gray-600 mb-1 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.description }} />
             <p className="text-xs text-gray-500">{project.technologies.join(' • ')}</p>
           </div>
         ))
@@ -160,7 +163,7 @@ export function ProfessionalTemplate({ data, template, sectionOrder }: TemplateP
           {customSection.title}
         </h2>
         {customSection.content ? (
-          <p className="text-gray-600 text-sm whitespace-pre-line">{customSection.content}</p>
+          <div className="text-gray-600 text-sm prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: customSection.content }} />
         ) : (
           <p className="text-gray-400 text-sm italic">暂无内容</p>
         )}

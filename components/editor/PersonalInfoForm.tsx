@@ -3,8 +3,8 @@
 import React from 'react';
 import { useResumeStore } from '@/store/resumeStore';
 import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
+import RichTextEditor from './RichTextEditorWrapper';
 
 export function PersonalInfoForm() {
   const { data, updatePersonalInfo } = useResumeStore();
@@ -87,12 +87,10 @@ export function PersonalInfoForm() {
 
       <div className="space-y-2">
         <Label htmlFor="summary">个人简介</Label>
-        <Textarea
-          id="summary"
-          value={personalInfo.summary}
-          onChange={(e) => updatePersonalInfo({ summary: e.target.value })}
+        <RichTextEditor
+          content={personalInfo.summary}
+          onChange={(html) => updatePersonalInfo({ summary: html })}
           placeholder="简要介绍你的专业背景和职业目标..."
-          rows={4}
         />
       </div>
     </div>
