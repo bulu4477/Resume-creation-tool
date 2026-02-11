@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResumeData, TemplateConfig, SectionType } from '@/types/resume';
+import { ResumeData, TemplateConfig, SectionType, PageSettings } from '@/types/resume';
 import { formatDateRange } from '@/lib/utils';
 import { PaginatedTemplate } from './PaginatedTemplate';
 
@@ -7,6 +7,7 @@ interface TemplateProps {
   data: ResumeData;
   template: TemplateConfig;
   sectionOrder: SectionType[];
+  pageSettings: PageSettings;
 }
 
 const sectionTitles: Record<SectionType, string> = {
@@ -16,7 +17,7 @@ const sectionTitles: Record<SectionType, string> = {
   projects: '项目经历',
 };
 
-export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps) {
+export function ClassicTemplate({ data, template, sectionOrder, pageSettings }: TemplateProps) {
   const { personalInfo, workExperience, education, skills, projects, customSections } = data;
 
   const renderHeader = () => (
@@ -41,17 +42,17 @@ export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps)
 
   const renderSummary = () =>
     personalInfo.summary && (
-      <section className="mb-6">
-        <h2 className="text-lg font-bold mb-3 uppercase tracking-wider" style={{ color: template.primaryColor }}>
+      <section className="mb-6" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+        <h2 className="font-bold mb-3 uppercase tracking-wider" style={{ color: template.primaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
           个人简介
         </h2>
-        <div className="text-gray-700 leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: personalInfo.summary }} />
+        <div className="text-gray-700 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: personalInfo.summary }} />
       </section>
     );
 
   const renderWorkExperience = () => (
-    <section className="mb-6">
-      <h2 className="text-lg font-bold mb-4 uppercase tracking-wider" style={{ color: template.primaryColor }}>
+    <section className="mb-6" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="font-bold mb-4 uppercase tracking-wider" style={{ color: template.primaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.workExperience}
       </h2>
       {workExperience.length > 0 ? (
@@ -65,7 +66,8 @@ export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps)
             </div>
             <p className="italic text-gray-700 mb-2">{exp.company || '公司'}</p>
             <div 
-              className="text-gray-600 text-sm leading-relaxed prose prose-sm max-w-none"
+              className="text-gray-600 leading-relaxed prose prose-sm max-w-none"
+              style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}
               dangerouslySetInnerHTML={{ __html: exp.description }}
             />
           </div>
@@ -77,8 +79,8 @@ export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps)
   );
 
   const renderEducation = () => (
-    <section className="mb-6">
-      <h2 className="text-lg font-bold mb-4 uppercase tracking-wider" style={{ color: template.primaryColor }}>
+    <section className="mb-6" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="font-bold mb-4 uppercase tracking-wider" style={{ color: template.primaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.education}
       </h2>
       {education.length > 0 ? (
@@ -102,12 +104,12 @@ export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps)
   );
 
   const renderSkills = () => (
-    <section className="mb-6">
-      <h2 className="text-lg font-bold mb-3 uppercase tracking-wider" style={{ color: template.primaryColor }}>
+    <section className="mb-6" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="font-bold mb-3 uppercase tracking-wider" style={{ color: template.primaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.skills}
       </h2>
       {skills.length > 0 ? (
-        <p className="text-gray-700">
+        <p className="text-gray-700" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>
           {skills.map((skill) => skill.name).join(' • ')}
         </p>
       ) : (
@@ -117,15 +119,15 @@ export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps)
   );
 
   const renderProjects = () => (
-    <section>
-      <h2 className="text-lg font-bold mb-4 uppercase tracking-wider" style={{ color: template.primaryColor }}>
+    <section style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="font-bold mb-4 uppercase tracking-wider" style={{ color: template.primaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.projects}
       </h2>
       {projects.length > 0 ? (
         projects.map((project) => (
           <div key={project.id} className="mb-4" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
             <h3 className="font-bold">{project.name || '项目名称'}</h3>
-            <div className="text-gray-600 text-sm mb-1 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.description }} />
+            <div className="text-gray-600 mb-1 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: project.description }} />
             <p className="text-sm text-gray-500">
               技术栈: {project.technologies.join(', ')}
             </p>
@@ -142,14 +144,14 @@ export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps)
     if (!customSection) return null;
 
     return (
-      <section className="mb-6">
-        <h2 className="text-lg font-bold mb-4 uppercase tracking-wider" style={{ color: template.primaryColor }}>
+      <section className="mb-6" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+        <h2 className="font-bold mb-4 uppercase tracking-wider" style={{ color: template.primaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
           {customSection.title}
         </h2>
         {customSection.content ? (
-          <div className="text-gray-600 text-sm prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: customSection.content }} />
+          <div className="text-gray-600 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: customSection.content }} />
         ) : (
-          <p className="text-gray-400 text-sm italic">暂无内容</p>
+          <p className="text-gray-400 italic" style={{ fontSize: `${pageSettings.contentSize}px` }}>暂无内容</p>
         )}
       </section>
     );
@@ -180,8 +182,10 @@ export function ClassicTemplate({ data, template, sectionOrder }: TemplateProps)
   ].filter(Boolean) as React.ReactElement[];
 
   return (
-    <PaginatedTemplate header={renderHeader()}>
-      {sections}
+    <PaginatedTemplate header={renderHeader()} pagePadding={pageSettings.pagePadding}>
+      {sections.map((section, index) => (
+        <div key={index}>{section}</div>
+      ))}
     </PaginatedTemplate>
   );
 }

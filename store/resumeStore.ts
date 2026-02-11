@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { ResumeData, TemplateId, SectionConfig, SectionType, CustomSection } from '@/types/resume';
+import { ResumeData, TemplateId, SectionConfig, SectionType, CustomSection, PageSettings } from '@/types/resume';
 import { defaultResumeData, sampleResumeData } from '@/lib/data';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -11,10 +11,20 @@ const defaultSections: SectionConfig[] = [
   { id: 'projects', title: '项目经历', visible: true, order: 4 },
 ];
 
+const defaultPageSettings: PageSettings = {
+  sectionTitleSize: 20,
+  contentSize: 14,
+  sectionSpacing: 24,
+  lineHeight: 1.6,
+  pagePadding: 16,
+  fontFamily: 'Inter, system-ui, sans-serif',
+};
+
 interface ResumeStore {
   data: ResumeData;
   currentTemplate: TemplateId;
   sections: SectionConfig[];
+  pageSettings: PageSettings;
   
   setData: (data: ResumeData) => void;
   updatePersonalInfo: (info: Partial<ResumeData['personalInfo']>) => void;
@@ -51,6 +61,9 @@ interface ResumeStore {
   reorderSections: (startIndex: number, endIndex: number) => void;
   toggleSectionVisibility: (sectionId: SectionType) => void;
   updateSectionOrder: (sections: SectionConfig[]) => void;
+  
+  updatePageSettings: (settings: Partial<PageSettings>) => void;
+  resetPageSettings: () => void;
 }
 
 const STORAGE_VERSION = 1;
@@ -61,6 +74,7 @@ export const useResumeStore = create<ResumeStore>()(
       data: defaultResumeData,
       currentTemplate: 'modern' as TemplateId,
       sections: defaultSections,
+      pageSettings: defaultPageSettings,
       
       setData: (data) => set({ data }),
       
@@ -305,6 +319,13 @@ export const useResumeStore = create<ResumeStore>()(
         })),
       
       updateSectionOrder: (sections) => set({ sections }),
+      
+      updatePageSettings: (settings) =>
+        set((state) => ({
+          pageSettings: { ...state.pageSettings, ...settings },
+        })),
+      
+      resetPageSettings: () => set({ pageSettings: defaultPageSettings }),
     }),
     {
       name: 'resume-storage',
@@ -313,6 +334,7 @@ export const useResumeStore = create<ResumeStore>()(
         data: state.data,
         currentTemplate: state.currentTemplate,
         sections: state.sections,
+        pageSettings: state.pageSettings,
       }),
       migrate: (persistedState: any, version) => {
         if (version !== STORAGE_VERSION) {
@@ -320,6 +342,7 @@ export const useResumeStore = create<ResumeStore>()(
             data: persistedState.data || defaultResumeData,
             currentTemplate: persistedState.currentTemplate || 'modern',
             sections: persistedState.sections || defaultSections,
+            pageSettings: persistedState.pageSettings || defaultPageSettings,
           } as any;
         }
         return persistedState;

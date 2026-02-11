@@ -6,18 +6,18 @@ interface PaginatedTemplateProps {
   children: ReactElement[];
   header: ReactElement;
   className?: string;
+  pagePadding?: number;
 }
 
 const A4_HEIGHT_MM = 297;
-const PAGE_PADDING_MM = 16;
-const CONTENT_HEIGHT_MM = A4_HEIGHT_MM - PAGE_PADDING_MM * 2;
 const MM_TO_PX = 3.7795275591;
-const CONTENT_HEIGHT_PX = CONTENT_HEIGHT_MM * MM_TO_PX;
 
-export function PaginatedTemplate({ children, header, className = '' }: PaginatedTemplateProps) {
+export function PaginatedTemplate({ children, header, className = '', pagePadding = 16 }: PaginatedTemplateProps) {
   const measureRef = useRef<HTMLDivElement>(null);
   const [pages, setPages] = useState<ReactElement[][]>([]);
   const [hasOverflow, setHasOverflow] = useState(false);
+  
+  const padding = pagePadding;
 
   useEffect(() => {
     if (!measureRef.current) return;
@@ -27,7 +27,9 @@ export function PaginatedTemplate({ children, header, className = '' }: Paginate
     const sectionEls = container.querySelectorAll('[data-measure-section]');
     
     const headerHeight = headerEl?.getBoundingClientRect().height || 0;
-    const availableHeightFirstPage = CONTENT_HEIGHT_PX - headerHeight;
+    const contentHeightMm = A4_HEIGHT_MM - padding * 2;
+    const contentHeightPx = contentHeightMm * MM_TO_PX;
+    const availableHeightFirstPage = contentHeightPx - headerHeight;
     
     const distributedPages: ReactElement[][] = [];
     let currentPageSections: ReactElement[] = [];
@@ -37,9 +39,9 @@ export function PaginatedTemplate({ children, header, className = '' }: Paginate
 
     sectionEls.forEach((sectionEl, index) => {
       const sectionHeight = sectionEl.getBoundingClientRect().height;
-      const availableHeight = isFirstPage ? availableHeightFirstPage : CONTENT_HEIGHT_PX;
+      const availableHeight = isFirstPage ? availableHeightFirstPage : contentHeightPx;
       
-      if (sectionHeight > CONTENT_HEIGHT_PX) {
+      if (sectionHeight > contentHeightPx) {
         hasContentOverflow = true;
       }
       
@@ -60,14 +62,14 @@ export function PaginatedTemplate({ children, header, className = '' }: Paginate
 
     setPages(distributedPages);
     setHasOverflow(hasContentOverflow);
-  }, [children, header, className]);
+  }, [children, header, className, padding]);
 
   const renderPages = () => {
     if (pages.length === 0) {
       return (
         <div 
           className="a4-page" 
-          style={{ 
+      style={{ 
             width: '210mm',
             height: '297mm',
             minHeight: '297mm',
@@ -77,7 +79,7 @@ export function PaginatedTemplate({ children, header, className = '' }: Paginate
             boxShadow: '0 0 20px rgba(0, 0, 0, 0.1)',
             marginBottom: '20px',
             boxSizing: 'border-box',
-            padding: '16mm'
+            padding: `${padding}mm`
           }}
         >
           {header}
@@ -100,7 +102,7 @@ export function PaginatedTemplate({ children, header, className = '' }: Paginate
           boxShadow: '0 0 20px rgba(0, 0, 0, 0.1)',
           marginBottom: '20px',
           boxSizing: 'border-box',
-          padding: '16mm'
+          padding: `${padding}mm`
         }}
       >
         {pageIndex === 0 ? header : null}
@@ -119,7 +121,7 @@ export function PaginatedTemplate({ children, header, className = '' }: Paginate
           width: '210mm',
           pointerEvents: 'none',
           zIndex: -1,
-          padding: '16mm',
+          padding: `${padding}mm`,
           boxSizing: 'border-box'
         }}
       >

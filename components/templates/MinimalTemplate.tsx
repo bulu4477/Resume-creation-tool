@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResumeData, TemplateConfig, SectionType } from '@/types/resume';
+import { ResumeData, TemplateConfig, SectionType, PageSettings } from '@/types/resume';
 import { formatDateRange } from '@/lib/utils';
 import { PaginatedTemplate } from './PaginatedTemplate';
 
@@ -7,6 +7,7 @@ interface TemplateProps {
   data: ResumeData;
   template: TemplateConfig;
   sectionOrder: SectionType[];
+  pageSettings: PageSettings;
 }
 
 const sectionTitles: Record<SectionType, string> = {
@@ -16,7 +17,7 @@ const sectionTitles: Record<SectionType, string> = {
   projects: '项目',
 };
 
-export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps) {
+export function MinimalTemplate({ data, template, sectionOrder, pageSettings }: TemplateProps) {
   const { personalInfo, workExperience, education, skills, projects, customSections } = data;
 
   const renderHeader = () => (
@@ -37,20 +38,20 @@ export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps)
 
   const renderSummary = () =>
     personalInfo.summary && (
-      <section className="mb-8">
-        <div className="text-gray-700 leading-relaxed prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: personalInfo.summary }} />
+      <section className="mb-8" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+        <div className="text-gray-700 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: personalInfo.summary }} />
       </section>
     );
 
   const renderSkills = () => (
-    <section className="mb-8">
-      <h2 className="text-sm font-semibold uppercase tracking-widest mb-4" style={{ color: template.primaryColor }}>
+    <section className="mb-8" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="font-semibold uppercase tracking-widest mb-4" style={{ color: template.primaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.skills}
       </h2>
       {skills.length > 0 ? (
         <div className="space-y-2">
           {skills.map((skill) => (
-            <div key={skill.id} className="text-sm">
+            <div key={skill.id} style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>
               <span className="font-medium">{skill.name}</span>
             </div>
           ))}
@@ -62,16 +63,16 @@ export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps)
   );
 
   const renderEducation = () => (
-    <section className="mb-8">
-      <h2 className="text-sm font-semibold uppercase tracking-widest mb-4" style={{ color: template.primaryColor }}>
+    <section className="mb-8" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="font-semibold uppercase tracking-widest mb-4" style={{ color: template.primaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.education}
       </h2>
       {education.length > 0 ? (
         education.map((edu) => (
           <div key={edu.id} className="mb-3 text-sm" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
-            <p className="font-medium">{edu.school || '学校'}</p>
-            <p className="text-gray-600">{edu.degree}</p>
-            <p className="text-gray-400 text-xs mt-1">
+            <p className="font-medium" style={{ fontSize: `${pageSettings.contentSize}px` }}>{edu.school || '学校'}</p>
+            <p className="text-gray-600" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>{edu.degree}</p>
+            <p className="text-gray-400 mt-1" style={{ fontSize: `${pageSettings.contentSize}px` }}>
               {formatDateRange(edu.startDate, edu.endDate, edu.current)}
             </p>
           </div>
@@ -83,8 +84,8 @@ export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps)
   );
 
   const renderWorkExperience = () => (
-    <section className="mb-8">
-      <h2 className="text-sm font-semibold uppercase tracking-widest mb-6 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor }}>
+    <section className="mb-8" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="font-semibold uppercase tracking-widest mb-6 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.workExperience}
       </h2>
       {workExperience.length > 0 ? (
@@ -96,9 +97,10 @@ export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps)
                 {formatDateRange(exp.startDate, exp.endDate, exp.current)}
               </span>
             </div>
-            <p className="text-sm text-gray-600 mb-2">{exp.company || '公司'}</p>
+            <p className="text-gray-600 mb-2" style={{ fontSize: `${pageSettings.contentSize}px` }}>{exp.company || '公司'}</p>
             <div 
-              className="text-sm text-gray-700 leading-relaxed prose prose-sm max-w-none"
+              className="text-gray-700 prose prose-sm max-w-none"
+              style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}
               dangerouslySetInnerHTML={{ __html: exp.description }}
             />
           </div>
@@ -110,15 +112,15 @@ export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps)
   );
 
   const renderProjects = () => (
-    <section>
-      <h2 className="text-sm font-semibold uppercase tracking-widest mb-6 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor }}>
+    <section style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="font-semibold uppercase tracking-widest mb-6 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.projects}
       </h2>
       {projects.length > 0 ? (
         projects.map((project) => (
           <div key={project.id} className="mb-4" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
             <h3 className="font-semibold mb-1">{project.name || '项目名称'}</h3>
-            <div className="text-sm text-gray-600 mb-1 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.description }} />
+            <div className="text-gray-600 mb-1 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: project.description }} />
             <p className="text-xs text-gray-400">
               {project.technologies.join(' · ')}
             </p>
@@ -135,14 +137,14 @@ export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps)
     if (!customSection) return null;
 
     return (
-      <section className="mb-8">
-        <h2 className="text-sm font-semibold uppercase tracking-widest mb-4" style={{ color: template.primaryColor }}>
+      <section className="mb-8" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+        <h2 className="font-semibold uppercase tracking-widest mb-4" style={{ color: template.primaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
           {customSection.title}
         </h2>
         {customSection.content ? (
-          <div className="text-gray-600 text-sm prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: customSection.content }} />
+          <div className="text-gray-600 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: customSection.content }} />
         ) : (
-          <p className="text-gray-400 text-sm italic">暂无内容</p>
+          <p className="text-gray-400 italic" style={{ fontSize: `${pageSettings.contentSize}px` }}>暂无内容</p>
         )}
       </section>
     );
@@ -173,8 +175,10 @@ export function MinimalTemplate({ data, template, sectionOrder }: TemplateProps)
   ].filter(Boolean) as React.ReactElement[];
 
   return (
-    <PaginatedTemplate header={renderHeader()} className="py-4">
-      {sections}
+    <PaginatedTemplate header={renderHeader()} className="py-4" pagePadding={pageSettings.pagePadding}>
+      {sections.map((section, index) => (
+        <div key={index}>{section}</div>
+      ))}
     </PaginatedTemplate>
   );
 }

@@ -14,7 +14,7 @@ interface ResumePreviewProps {
 }
 
 export function ResumePreview({ targetRef }: ResumePreviewProps) {
-  const { data, currentTemplate, sections } = useResumeStore();
+  const { data, currentTemplate, sections, pageSettings } = useResumeStore();
   const template = getTemplateById(currentTemplate);
 
   const sortedSections = [...sections].sort((a, b) => a.order - b.order);
@@ -26,6 +26,7 @@ export function ResumePreview({ targetRef }: ResumePreviewProps) {
       data,
       template,
       sectionOrder,
+      pageSettings,
     };
 
     switch (currentTemplate) {
@@ -47,7 +48,7 @@ export function ResumePreview({ targetRef }: ResumePreviewProps) {
       <div
         ref={targetRef}
         style={{
-          fontFamily: template.fontFamily,
+          fontFamily: pageSettings.fontFamily,
         }}
       >
         {renderTemplate()}

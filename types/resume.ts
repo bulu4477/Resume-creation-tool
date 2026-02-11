@@ -84,3 +84,25 @@ export interface SectionConfig {
 export interface ResumeSections {
   sections: SectionConfig[];
 }
+
+export interface PageSettings {
+  sectionTitleSize: number;
+  contentSize: number;
+  sectionSpacing: number;
+  lineHeight: number;
+  pagePadding: number;
+  fontFamily: string;
+}
+
+export const AVAILABLE_FONTS = [
+  { value: 'Inter, system-ui, sans-serif', label: 'Inter (现代无衬线)' },
+  { value: 'Georgia, Times New Roman, serif', label: 'Georgia (经典衬线)' },
+  { value: 'Helvetica, Arial, sans-serif', label: 'Helvetica (简洁无衬线)' },
+  { value: 'Segoe UI, Roboto, sans-serif', label: 'Segoe UI (系统默认)' },
+  { value: '"Microsoft YaHei", "PingFang SC", sans-serif', label: '微软雅黑 (中文优化)' },
+  { value: '"Noto Sans SC", "Source Han Sans SC", sans-serif', label: '思源黑体 (中文黑体)' },
+  { value: '"Noto Serif SC", "Source Han Serif SC", serif', label: '思源宋体 (中文宋体)' },
+  { value: '"Fira Code", "Monaco", monospace', label: 'Fira Code (等宽字体)' },
+  { value: '"Playfair Display", Georgia, serif', label: 'Playfair (优雅衬线)' },
+  { value: '"Open Sans", "Helvetica Neue", sans-serif', label: 'Open Sans (友好无衬线)' },
+] as const;

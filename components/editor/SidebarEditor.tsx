@@ -12,12 +12,14 @@ import { CustomSectionForm } from './CustomSectionForm';
 import { AddCustomSectionButton } from './AddCustomSectionButton';
 import { ActionButtons } from './ActionButtons';
 import { TemplateSelector } from './TemplateSelector';
-import { GripVertical, Eye, EyeOff, ChevronDown, User, Briefcase, GraduationCap, Wrench, FolderOpen, Palette, FileText, CheckCircle2, Cloud } from 'lucide-react';
+import { PageSettingsPanel } from './PageSettingsPanel';
+import { GripVertical, Eye, EyeOff, ChevronDown, User, Briefcase, GraduationCap, Wrench, FolderOpen, Palette, FileText, Settings2, CheckCircle2, Cloud } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const sectionIcons: Record<string, React.ReactNode> = {
   personal: <User className="w-5 h-5" />,
   template: <Palette className="w-5 h-5" />,
+  pageSettings: <Settings2 className="w-5 h-5" />,
   workExperience: <Briefcase className="w-5 h-5" />,
   education: <GraduationCap className="w-5 h-5" />,
   skills: <Wrench className="w-5 h-5" />,
@@ -28,13 +30,14 @@ const sectionIcons: Record<string, React.ReactNode> = {
 const sectionTitles: Record<string, string> = {
   personal: '个人信息',
   template: '选择模板',
+  pageSettings: '页面设置',
   workExperience: '工作经历',
   education: '教育背景',
   skills: '技能',
   projects: '项目经历',
 };
 
-type SectionId = SectionType | 'personal' | 'template';
+type SectionId = SectionType | 'personal' | 'template' | 'pageSettings';
 
 interface SectionItemProps {
   id: SectionId;
@@ -81,6 +84,7 @@ function SectionItem({
   const renderForm = () => {
     if (id === 'template') return <TemplateSelector />;
     if (id === 'personal') return <PersonalInfoForm />;
+    if (id === 'pageSettings') return <PageSettingsPanel />;
     if (id === 'workExperience') return <WorkExperienceForm />;
     if (id === 'education') return <EducationForm />;
     if (id === 'skills') return <SkillsForm />;
@@ -280,6 +284,13 @@ export function SidebarEditor() {
           title="选择模板"
           isOpen={openSection === 'template'}
           onToggle={() => handleToggle('template')}
+        />
+
+        <SectionItem
+          id="pageSettings"
+          title="页面设置"
+          isOpen={openSection === 'pageSettings'}
+          onToggle={() => handleToggle('pageSettings')}
         />
 
         <SectionItem

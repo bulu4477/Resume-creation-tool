@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResumeData, TemplateConfig, SectionType } from '@/types/resume';
+import { ResumeData, TemplateConfig, SectionType, PageSettings } from '@/types/resume';
 import { formatDateRange } from '@/lib/utils';
 import { Mail, Phone, MapPin, Globe, Linkedin, Github } from 'lucide-react';
 import { PaginatedTemplate } from './PaginatedTemplate';
@@ -8,6 +8,7 @@ interface TemplateProps {
   data: ResumeData;
   template: TemplateConfig;
   sectionOrder: SectionType[];
+  pageSettings: PageSettings;
 }
 
 const sectionTitles: Record<string, string> = {
@@ -17,7 +18,7 @@ const sectionTitles: Record<string, string> = {
   projects: '项目经历',
 };
 
-export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) {
+export function ModernTemplate({ data, template, sectionOrder, pageSettings }: TemplateProps) {
   const { personalInfo, workExperience, education, skills, projects, customSections } = data;
 
   const renderHeader = () => (
@@ -72,8 +73,8 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
   );
 
   const renderWorkExperience = () => (
-    <section className="mb-6">
-      <h2 className="text-xl font-bold mb-4 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor }}>
+    <section className="mb-6" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="text-xl font-bold mb-4 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.workExperience}
       </h2>
       {workExperience.length > 0 ? (
@@ -87,7 +88,8 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
             </div>
             <p className="text-gray-700 font-medium mb-2">{exp.company || '公司'}</p>
             <div 
-              className="text-gray-600 text-sm prose prose-sm max-w-none"
+              className="text-gray-600 prose prose-sm max-w-none"
+              style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}
               dangerouslySetInnerHTML={{ __html: exp.description }}
             />
           </div>
@@ -99,8 +101,8 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
   );
 
   const renderEducation = () => (
-    <section className="mb-6">
-      <h2 className="text-xl font-bold mb-4 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor }}>
+    <section className="mb-6" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="text-xl font-bold mb-4 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.education}
       </h2>
       {education.length > 0 ? (
@@ -109,8 +111,8 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="font-semibold">{edu.school || '学校'}</h3>
-                <p className="text-gray-700">{edu.degree} {edu.field && `- ${edu.field}`}</p>
-                {edu.description && <div className="text-gray-600 text-sm mt-1 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: edu.description }} />}
+                <p className="text-gray-700" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>{edu.degree} {edu.field && `- ${edu.field}`}</p>
+                {edu.description && <div className="text-gray-600 mt-1 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: edu.description }} />}
               </div>
               <span className="text-sm text-gray-500">
                 {formatDateRange(edu.startDate, edu.endDate, edu.current)}
@@ -125,8 +127,8 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
   );
 
   const renderSkills = () => (
-    <section className="mb-6">
-      <h2 className="text-xl font-bold mb-4 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor }}>
+    <section className="mb-6" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="text-xl font-bold mb-4 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.skills}
       </h2>
       {skills.length > 0 ? (
@@ -134,8 +136,8 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
           {skills.map((skill) => (
             <span
               key={skill.id}
-              className="px-3 py-1 rounded-full text-sm"
-              style={{ backgroundColor: template.primaryColor + '20', color: template.primaryColor }}
+              className="px-3 py-1 rounded-full"
+              style={{ backgroundColor: template.primaryColor + '20', color: template.primaryColor, fontSize: `${pageSettings.contentSize}px` }}
             >
               {skill.name}
             </span>
@@ -148,8 +150,8 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
   );
 
   const renderProjects = () => (
-    <section>
-      <h2 className="text-xl font-bold mb-4 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor }}>
+    <section style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+      <h2 className="text-xl font-bold mb-4 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
         {sectionTitles.projects}
       </h2>
       {projects.length > 0 ? (
@@ -163,7 +165,7 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
                 </a>
               )}
             </div>
-            <div className="text-gray-600 text-sm mb-2 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: project.description }} />
+            <div className="text-gray-600 mb-2 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: project.description }} />
             <div className="flex flex-wrap gap-1">
               {project.technologies.map((tech, idx) => (
                 <span key={idx} className="text-xs text-gray-500">
@@ -184,14 +186,14 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
     if (!customSection) return null;
 
     return (
-      <section className="mb-6">
-        <h2 className="text-xl font-bold mb-4 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor }}>
+      <section className="mb-6" style={{ marginBottom: `${pageSettings.sectionSpacing}px` }}>
+        <h2 className="text-xl font-bold mb-4 pb-2 border-b" style={{ color: template.primaryColor, borderColor: template.secondaryColor, fontSize: `${pageSettings.sectionTitleSize}px` }}>
           {customSection.title}
         </h2>
         {customSection.content ? (
-          <div className="text-gray-600 text-sm prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: customSection.content }} />
+          <div className="text-gray-600 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: customSection.content }} />
         ) : (
-          <p className="text-gray-400 text-sm italic">暂无内容</p>
+          <p className="text-gray-400 italic" style={{ fontSize: `${pageSettings.contentSize}px` }}>暂无内容</p>
         )}
       </section>
     );
@@ -219,8 +221,10 @@ export function ModernTemplate({ data, template, sectionOrder }: TemplateProps) 
   const sections = sectionOrder.map((sectionId) => renderSection(sectionId)).filter(Boolean) as React.ReactElement[];
 
   return (
-    <PaginatedTemplate header={renderHeader()}>
-      {sections}
+    <PaginatedTemplate header={renderHeader()} pagePadding={pageSettings.pagePadding}>
+      {sections.map((section, index) => (
+        <div key={index}>{section}</div>
+      ))}
     </PaginatedTemplate>
   );
 }
