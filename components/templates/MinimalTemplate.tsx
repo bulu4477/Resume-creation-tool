@@ -50,11 +50,18 @@ export function MinimalTemplate({ data, template, sectionOrder, pageSettings }: 
       </h2>
       {skills.length > 0 ? (
         <div className="space-y-2">
-          {skills.map((skill) => (
-            <div key={skill.id} style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>
-              <span className="font-medium">{skill.name}</span>
-            </div>
-          ))}
+          {skills.map((skill) => {
+            const levelText = skill.level
+              ? { beginner: '入门', intermediate: '熟练', advanced: '精通', expert: '专家' }[skill.level]
+              : null;
+            return (
+              <div key={skill.id} style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>
+                <span className="font-bold">{skill.name}</span>
+                {levelText && <span className="text-gray-500">（{levelText}）</span>}
+                {skill.description && `: ${skill.description}`}
+              </div>
+            );
+          })}
         </div>
       ) : (
         <p className="text-gray-400 text-sm italic">暂无技能</p>
@@ -71,7 +78,8 @@ export function MinimalTemplate({ data, template, sectionOrder, pageSettings }: 
         education.map((edu) => (
           <div key={edu.id} className="mb-3 text-sm" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
             <p className="font-medium" style={{ fontSize: `${pageSettings.contentSize}px` }}>{edu.school || '学校'}</p>
-            <p className="text-gray-600" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>{edu.degree}</p>
+            <p className="text-gray-600">{edu.degree}{edu.field && `, ${edu.field}`}</p>
+            {edu.description && <div className="text-gray-500 mt-1 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: edu.description }} />}
             <p className="text-gray-400 mt-1" style={{ fontSize: `${pageSettings.contentSize}px` }}>
               {formatDateRange(edu.startDate, edu.endDate, edu.current)}
             </p>

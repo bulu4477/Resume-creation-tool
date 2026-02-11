@@ -123,12 +123,18 @@ export function ProfessionalTemplate({ data, template, sectionOrder, pageSetting
       </h2>
       {skills.length > 0 ? (
         <div className="space-y-2">
-          {skills.map((skill) => (
-            <div key={skill.id} className="flex items-center gap-2" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>
-              <span className="font-medium">{skill.name}</span>
-              <span className="text-xs text-gray-500">({skill.level})</span>
-            </div>
-          ))}
+          {skills.map((skill) => {
+            const levelText = skill.level
+              ? { beginner: '入门', intermediate: '熟练', advanced: '精通', expert: '专家' }[skill.level]
+              : null;
+            return (
+              <div key={skill.id} style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>
+                <span className="font-bold">{skill.name}</span>
+                {levelText && <span className="text-gray-500">（{levelText}）</span>}
+                {skill.description && `: ${skill.description}`}
+              </div>
+            );
+          })}
         </div>
       ) : (
         <p className="text-gray-400 text-sm italic">暂无技能</p>

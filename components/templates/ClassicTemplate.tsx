@@ -90,6 +90,7 @@ export function ClassicTemplate({ data, template, sectionOrder, pageSettings }: 
               <div>
                 <h3 className="font-bold">{edu.school || '学校'}</h3>
                 <p className="italic text-gray-700">{edu.degree}{edu.field && `, ${edu.field}`}</p>
+                {edu.description && <div className="text-gray-600 mt-1 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: edu.description }} />}
               </div>
               <span className="text-sm text-gray-600">
                 {formatDateRange(edu.startDate, edu.endDate, edu.current)}
@@ -109,9 +110,20 @@ export function ClassicTemplate({ data, template, sectionOrder, pageSettings }: 
         {sectionTitles.skills}
       </h2>
       {skills.length > 0 ? (
-        <p className="text-gray-700" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>
-          {skills.map((skill) => skill.name).join(' • ')}
-        </p>
+        <div className="space-y-1">
+          {skills.map((skill) => {
+            const levelText = skill.level
+              ? { beginner: '入门', intermediate: '熟练', advanced: '精通', expert: '专家' }[skill.level]
+              : null;
+            return (
+              <p key={skill.id} className="text-gray-700" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>
+                <span className="font-bold">{skill.name}</span>
+                {levelText && <span className="text-gray-500">（{levelText}）</span>}
+                {skill.description && `: ${skill.description}`}
+              </p>
+            );
+          })}
+        </div>
       ) : (
         <p className="text-gray-400 text-sm italic">暂无技能</p>
       )}

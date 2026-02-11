@@ -43,7 +43,8 @@ export const createEmptyEducation = () => ({
 export const createEmptySkill = () => ({
   id: uuidv4(),
   name: '',
-  level: 'intermediate' as const,
+  level: undefined,
+  description: '',
 });
 
 export const createEmptyProject = () => ({

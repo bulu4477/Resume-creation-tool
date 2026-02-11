@@ -8,13 +8,6 @@ import { Card } from '@/components/ui/Card';
 import { createEmptySkill } from '@/lib/data';
 import { ChevronUp, ChevronDown, Trash2 } from 'lucide-react';
 
-const skillLevels = [
-  { value: 'beginner', label: '入门' },
-  { value: 'intermediate', label: '熟练' },
-  { value: 'advanced', label: '精通' },
-  { value: 'expert', label: '专家' },
-];
-
 export function SkillsForm() {
   const { data, addSkill, updateSkill, removeSkill, reorderSkills } = useResumeStore();
 
@@ -38,9 +31,9 @@ export function SkillsForm() {
   return (
     <div className="space-y-4">
       {data.skills.map((item, index) => (
-        <Card key={item.id} className="p-3">
-          <div className="flex items-center gap-3">
-            <div className="flex flex-col gap-1">
+        <Card key={item.id} className="p-4">
+          <div className="flex items-start gap-3">
+            <div className="flex flex-col gap-1 pt-1">
               <button
                 onClick={() => handleMoveUp(index)}
                 disabled={index === 0}
@@ -56,33 +49,44 @@ export function SkillsForm() {
                 <ChevronDown className="w-4 h-4 text-gray-500" />
               </button>
             </div>
-            <div className="flex-1 grid grid-cols-2 gap-3">
+            
+            <div className="flex-1 space-y-3">
               <Input
                 value={item.name}
                 onChange={(e) => updateSkill(item.id, { name: e.target.value })}
-                placeholder={`技能 ${index + 1}`}
+                placeholder="技能名称（如：智能合约和协议设计）"
+                className="font-medium"
               />
-              <select
-                value={item.level}
-                onChange={(e) =>
-                  updateSkill(item.id, {
-                    level: e.target.value as typeof item.level,
-                  })
-                }
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {skillLevels.map((level) => (
-                  <option key={level.value} value={level.value}>
-                    {level.label}
-                  </option>
-                ))}
-              </select>
+              <div className="flex gap-2">
+                <select
+                  value={item.level || ''}
+                  onChange={(e) =>
+                    updateSkill(item.id, {
+                      level: e.target.value ? e.target.value as typeof item.level : undefined,
+                    })
+                  }
+                  className="flex h-10 w-40 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="">不显示</option>
+                  <option value="beginner">入门</option>
+                  <option value="intermediate">熟练</option>
+                  <option value="advanced">精通</option>
+                  <option value="expert">专家</option>
+                </select>
+                <Input
+                  value={item.description || ''}
+                  onChange={(e) => updateSkill(item.id, { description: e.target.value })}
+                  placeholder="详细描述（如：熟练使用Solidity进行智能合约开发）"
+                  className="flex-1"
+                />
+              </div>
             </div>
+            
             <Button
               variant="ghost"
               size="sm"
               onClick={() => removeSkill(item.id)}
-              className="flex-shrink-0"
+              className="mt-1"
             >
               <Trash2 className="w-4 h-4 text-red-500" />
             </Button>

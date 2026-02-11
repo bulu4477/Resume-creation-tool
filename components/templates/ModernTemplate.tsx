@@ -132,16 +132,19 @@ export function ModernTemplate({ data, template, sectionOrder, pageSettings }: T
         {sectionTitles.skills}
       </h2>
       {skills.length > 0 ? (
-        <div className="flex flex-wrap gap-2">
-          {skills.map((skill) => (
-            <span
-              key={skill.id}
-              className="px-3 py-1 rounded-full"
-              style={{ backgroundColor: template.primaryColor + '20', color: template.primaryColor, fontSize: `${pageSettings.contentSize}px` }}
-            >
-              {skill.name}
-            </span>
-          ))}
+        <div className="space-y-2">
+          {skills.map((skill) => {
+            const levelText = skill.level
+              ? { beginner: '入门', intermediate: '熟练', advanced: '精通', expert: '专家' }[skill.level]
+              : null;
+            return (
+              <div key={skill.id} className="text-gray-700" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>
+                <span className="font-bold">{skill.name}</span>
+                {levelText && <span className="text-gray-500">（{levelText}）</span>}
+                {skill.description && `: ${skill.description}`}
+              </div>
+            );
+          })}
         </div>
       ) : (
         <p className="text-gray-400 text-sm italic">暂无技能</p>

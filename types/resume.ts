@@ -33,7 +33,8 @@ export interface Education {
 export interface Skill {
   id: string;
   name: string;
-  level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  level?: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  description?: string;
 }
 
 export interface Project {
