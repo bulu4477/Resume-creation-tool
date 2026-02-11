@@ -8,16 +8,28 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import RichTextEditor from './RichTextEditorWrapper';
 import { createEmptyProject } from '@/lib/data';
-import { GripVertical, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronUp, ChevronDown, Trash2, ChevronDown as ChevronDownIcon } from 'lucide-react';
 
 export function ProjectsForm() {
-  const { data, addProject, updateProject, removeProject } = useResumeStore();
+  const { data, addProject, updateProject, removeProject, reorderProjects } = useResumeStore();
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const handleAdd = () => {
     const newItem = createEmptyProject();
     addProject(newItem);
     setExpandedId(newItem.id);
+  };
+
+  const handleMoveUp = (index: number) => {
+    if (index > 0) {
+      reorderProjects(index, index - 1);
+    }
+  };
+
+  const handleMoveDown = (index: number) => {
+    if (index < data.projects.length - 1) {
+      reorderProjects(index, index + 1);
+    }
   };
 
   return (
@@ -29,7 +41,28 @@ export function ProjectsForm() {
             onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
           >
             <div className="flex items-center gap-2">
-              <GripVertical className="w-5 h-5 text-gray-400" />
+              <div className="flex flex-col gap-1">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMoveUp(index);
+                  }}
+                  disabled={index === 0}
+                  className="p-1 hover:bg-gray-100 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronUp className="w-4 h-4 text-gray-500" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMoveDown(index);
+                  }}
+                  disabled={index === data.projects.length - 1}
+                  className="p-1 hover:bg-gray-100 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
               <div>
                 <h4 className="font-medium">
                   {item.name || `项目 ${index + 1}`}
@@ -45,7 +78,7 @@ export function ProjectsForm() {
               {expandedId === item.id ? (
                 <ChevronUp className="w-5 h-5" />
               ) : (
-                <ChevronDown className="w-5 h-5" />
+                <ChevronDownIcon className="w-5 h-5" />
               )}
               <Button
                 variant="ghost"

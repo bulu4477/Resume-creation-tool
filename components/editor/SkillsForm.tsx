@@ -3,11 +3,10 @@
 import React from 'react';
 import { useResumeStore } from '@/store/resumeStore';
 import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { createEmptySkill } from '@/lib/data';
-import { GripVertical, Trash2 } from 'lucide-react';
+import { ChevronUp, ChevronDown, Trash2 } from 'lucide-react';
 
 const skillLevels = [
   { value: 'beginner', label: '入门' },
@@ -17,11 +16,23 @@ const skillLevels = [
 ];
 
 export function SkillsForm() {
-  const { data, addSkill, updateSkill, removeSkill } = useResumeStore();
+  const { data, addSkill, updateSkill, removeSkill, reorderSkills } = useResumeStore();
 
   const handleAdd = () => {
     const newItem = createEmptySkill();
     addSkill(newItem);
+  };
+
+  const handleMoveUp = (index: number) => {
+    if (index > 0) {
+      reorderSkills(index, index - 1);
+    }
+  };
+
+  const handleMoveDown = (index: number) => {
+    if (index < data.skills.length - 1) {
+      reorderSkills(index, index + 1);
+    }
   };
 
   return (
@@ -29,7 +40,22 @@ export function SkillsForm() {
       {data.skills.map((item, index) => (
         <Card key={item.id} className="p-3">
           <div className="flex items-center gap-3">
-            <GripVertical className="w-5 h-5 text-gray-400 flex-shrink-0" />
+            <div className="flex flex-col gap-1">
+              <button
+                onClick={() => handleMoveUp(index)}
+                disabled={index === 0}
+                className="p-1 hover:bg-gray-100 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronUp className="w-4 h-4 text-gray-500" />
+              </button>
+              <button
+                onClick={() => handleMoveDown(index)}
+                disabled={index === data.skills.length - 1}
+                className="p-1 hover:bg-gray-100 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              </button>
+            </div>
             <div className="flex-1 grid grid-cols-2 gap-3">
               <Input
                 value={item.name}

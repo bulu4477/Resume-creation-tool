@@ -9,17 +9,29 @@ import { Checkbox } from '@/components/ui/Checkbox';
 import { Card } from '@/components/ui/Card';
 import RichTextEditor from './RichTextEditorWrapper';
 import { createEmptyWorkExperience } from '@/lib/data';
-import { GripVertical, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronUp, ChevronDown, Trash2, ChevronDown as ChevronDownIcon } from 'lucide-react';
 import { formatDateRange } from '@/lib/utils';
 
 export function WorkExperienceForm() {
-  const { data, addWorkExperience, updateWorkExperience, removeWorkExperience } = useResumeStore();
+  const { data, addWorkExperience, updateWorkExperience, removeWorkExperience, reorderWorkExperience } = useResumeStore();
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const handleAdd = () => {
     const newItem = createEmptyWorkExperience();
     addWorkExperience(newItem);
     setExpandedId(newItem.id);
+  };
+
+  const handleMoveUp = (index: number) => {
+    if (index > 0) {
+      reorderWorkExperience(index, index - 1);
+    }
+  };
+
+  const handleMoveDown = (index: number) => {
+    if (index < data.workExperience.length - 1) {
+      reorderWorkExperience(index, index + 1);
+    }
   };
 
   return (
@@ -31,7 +43,28 @@ export function WorkExperienceForm() {
             onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
           >
             <div className="flex items-center gap-2">
-              <GripVertical className="w-5 h-5 text-gray-400" />
+              <div className="flex flex-col gap-1">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMoveUp(index);
+                  }}
+                  disabled={index === 0}
+                  className="p-1 hover:bg-gray-100 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronUp className="w-4 h-4 text-gray-500" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMoveDown(index);
+                  }}
+                  disabled={index === data.workExperience.length - 1}
+                  className="p-1 hover:bg-gray-100 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
               <div>
                 <h4 className="font-medium">
                   {item.position || `工作经历 ${index + 1}`}
@@ -50,7 +83,7 @@ export function WorkExperienceForm() {
               {expandedId === item.id ? (
                 <ChevronUp className="w-5 h-5" />
               ) : (
-                <ChevronDown className="w-5 h-5" />
+                <ChevronDownIcon className="w-5 h-5" />
               )}
               <Button
                 variant="ghost"

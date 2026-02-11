@@ -52,6 +52,7 @@ interface ResumeStore {
   addCustomSection: (title: string, content: string) => string;
   updateCustomSection: (id: string, title: string, content: string) => void;
   removeCustomSection: (id: string) => void;
+  reorderCustomSections: (startIndex: number, endIndex: number) => void;
   
   setTemplate: (template: TemplateId) => void;
   resetData: () => void;
@@ -288,7 +289,17 @@ export const useResumeStore = create<ResumeStore>()(
             sections: state.sections.filter((section) => section.id !== sectionId),
           };
         }),
-      
+       
+      reorderCustomSections: (startIndex, endIndex) =>
+        set((state) => {
+          const items = [...state.data.customSections];
+          const [removed] = items.splice(startIndex, 1);
+          items.splice(endIndex, 0, removed);
+          return {
+            data: { ...state.data, customSections: items },
+          };
+        }),
+       
       setTemplate: (template) => set({ currentTemplate: template }),
       resetData: () => set({ data: defaultResumeData, sections: defaultSections }),
       loadSampleData: () => set({ data: sampleResumeData, sections: defaultSections }),

@@ -6,10 +6,10 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Label } from '@/components/ui/Label';
-import { Plus, Trash2, Edit2, Check, X } from 'lucide-react';
+import { Plus, Trash2, Edit2, Check, X, ChevronUp, ChevronDown } from 'lucide-react';
 
 export function CustomSectionsForm() {
-  const { data, addCustomSection, updateCustomSection, removeCustomSection } = useResumeStore();
+  const { data, addCustomSection, updateCustomSection, removeCustomSection, reorderCustomSections } = useResumeStore();
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState('');
@@ -51,9 +51,21 @@ export function CustomSectionsForm() {
     setNewContent('');
   };
 
+  const handleMoveUp = (index: number) => {
+    if (index > 0) {
+      reorderCustomSections(index, index - 1);
+    }
+  };
+
+  const handleMoveDown = (index: number) => {
+    if (index < data.customSections.length - 1) {
+      reorderCustomSections(index, index + 1);
+    }
+  };
+
   return (
     <div className="space-y-4">
-      {data.customSections.map((section) => (
+      {data.customSections.map((section, index) => (
         <div key={section.id} className="border rounded-lg p-4 bg-gray-50">
           {editingId === section.id ? (
             <div className="space-y-3">
@@ -87,8 +99,26 @@ export function CustomSectionsForm() {
             </div>
           ) : (
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-semibold text-lg">{section.title}</h4>
+              <div className="flex items-center gap-2">
+                <div className="flex flex-col gap-1">
+                  <button
+                    onClick={() => handleMoveUp(index)}
+                    disabled={index === 0}
+                    className="p-1 hover:bg-gray-200 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <ChevronUp className="w-4 h-4 text-gray-500" />
+                  </button>
+                  <button
+                    onClick={() => handleMoveDown(index)}
+                    disabled={index === data.customSections.length - 1}
+                    className="p-1 hover:bg-gray-200 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    <ChevronDown className="w-4 h-4 text-gray-500" />
+                  </button>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-lg">{section.title}</h4>
+                </div>
                 <div className="flex gap-1">
                   <Button
                     variant="ghost"
@@ -106,7 +136,7 @@ export function CustomSectionsForm() {
                   </Button>
                 </div>
               </div>
-              <p className="text-gray-600 text-sm whitespace-pre-line">{section.content || '暂无内容'}</p>
+              <p className="text-gray-600 text-sm whitespace-pre-line mt-2">{section.content || '暂无内容'}</p>
             </div>
           )}
         </div>
@@ -120,7 +150,7 @@ export function CustomSectionsForm() {
               <Input
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
-                placeholder="例如：获奖经历、兴趣爱好、语言能力..."
+                placeholder="例如：获奖经历、兴趣爱好，语言能力..."
               />
             </div>
             <div>
