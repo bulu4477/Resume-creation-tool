@@ -13,7 +13,7 @@ import { AddCustomSectionButton } from './AddCustomSectionButton';
 import { ActionButtons } from './ActionButtons';
 import { TemplateSelector } from './TemplateSelector';
 import { PageSettingsPanel } from './PageSettingsPanel';
-import { GripVertical, Eye, EyeOff, ChevronDown, User, Briefcase, GraduationCap, Wrench, FolderOpen, Palette, FileText, Settings2, CheckCircle2, Cloud } from 'lucide-react';
+import { Eye, EyeOff, ChevronDown, ChevronUp, User, Briefcase, GraduationCap, Wrench, FolderOpen, Palette, FileText, Settings2, CheckCircle2, Cloud } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const sectionIcons: Record<string, React.ReactNode> = {
@@ -44,15 +44,6 @@ interface SectionItemProps {
   title: string;
   isOpen: boolean;
   onToggle: () => void;
-  onDragStart?: () => void;
-  onDragOver?: (e: React.DragEvent) => void;
-  onDragEnd?: () => void;
-  onMouseDown?: () => void;
-  onMouseUp?: () => void;
-  onMouseLeave?: () => void;
-  isDragging?: boolean;
-  isDragged?: boolean;
-  isDraggable?: boolean;
   isVisible?: boolean;
   onToggleVisibility?: (e: React.MouseEvent) => void;
   isCustom?: boolean;
@@ -63,15 +54,6 @@ function SectionItem({
   title,
   isOpen,
   onToggle,
-  onDragStart,
-  onDragOver,
-  onDragEnd,
-  onMouseDown,
-  onMouseUp,
-  onMouseLeave,
-  isDragging,
-  isDragged,
-  isDraggable,
   isVisible = true,
   onToggleVisibility,
   isCustom = false,
@@ -97,17 +79,9 @@ function SectionItem({
 
   return (
     <div
-      draggable={isDragging && isDraggable}
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDragEnd={onDragEnd}
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
-      onMouseLeave={onMouseLeave}
       className={cn(
         'border rounded-lg overflow-hidden transition-all duration-200',
         isOpen ? 'border-blue-500 shadow-md' : 'border-gray-200 hover:border-gray-300',
-        isDragged && 'opacity-50',
         !isVisible && 'opacity-50'
       )}
     >
@@ -118,12 +92,6 @@ function SectionItem({
           isOpen ? 'bg-blue-50' : 'bg-white hover:bg-gray-50'
         )}
       >
-        {isDraggable && (
-          <div className="flex-shrink-0 text-gray-400" title="长按拖拽排序">
-            <GripVertical className="w-4 h-4" />
-          </div>
-        )}
-        
         <div className={cn(
           'flex-shrink-0',
           isOpen ? 'text-blue-600' : 'text-gray-500'
@@ -138,7 +106,7 @@ function SectionItem({
           {title}
         </span>
 
-        {isDraggable && onToggleVisibility && (
+        {onToggleVisibility && (
           <button
             onClick={onToggleVisibility}
             className="p-1.5 rounded-full hover:bg-gray-200 transition-colors flex-shrink-0"
@@ -216,66 +184,30 @@ function AutoSaveIndicator() {
 export function SidebarEditor() {
   const { sections, reorderSections, toggleSectionVisibility } = useResumeStore();
   const [openSection, setOpenSection] = useState<SectionId>('personal');
-  const [draggedItem, setDraggedItem] = useState<string | null>(null);
-  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
 
   const sortedSections = [...sections].sort((a, b) => a.order - b.order);
 
   const handleToggle = (id: SectionId) => {
-    if (isDragging) return;
     setOpenSection(openSection === id ? ('' as SectionId) : id);
   };
 
-  const handleMouseDown = useCallback((sectionId: string) => {
-    const timer = setTimeout(() => {
-      setIsDragging(true);
-      setDraggedItem(sectionId);
-    }, 500);
-    setLongPressTimer(timer);
-  }, []);
-
-  const handleMouseUp = useCallback(() => {
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
+  const handleMoveUp = (index: number) => {
+    if (index > 0) {
+      reorderSections(index, index - 1);
     }
-    setTimeout(() => setIsDragging(false), 100);
-  }, [longPressTimer]);
-
-  const handleMouseLeave = useCallback(() => {
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
-    }
-  }, [longPressTimer]);
-
-  const handleDragStart = (sectionId: string) => {
-    setDraggedItem(sectionId);
   };
 
-  const handleDragOver = (e: React.DragEvent, targetId: string) => {
-    e.preventDefault();
-    if (!draggedItem || draggedItem === targetId) return;
-
-    const draggedIndex = sortedSections.findIndex((s) => s.id === draggedItem);
-    const targetIndex = sortedSections.findIndex((s) => s.id === targetId);
-    
-    if (draggedIndex === -1 || targetIndex === -1) return;
-    
-    reorderSections(draggedIndex, targetIndex);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedItem(null);
-    setIsDragging(false);
+  const handleMoveDown = (index: number) => {
+    if (index < sortedSections.length - 1) {
+      reorderSections(index, index + 1);
+    }
   };
 
   return (
     <div className="h-full flex flex-col bg-white">
       <div className="p-5 border-b bg-gradient-to-r from-blue-600 to-blue-700 text-white flex-shrink-0">
         <h1 className="text-xl font-bold">简历编辑器</h1>
-        <p className="text-xs text-blue-100 mt-1">点击展开编辑，长按模块可拖拽排序</p>
+        <p className="text-xs text-blue-100 mt-1">点击展开编辑，使用箭头调整模块顺序</p>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -300,29 +232,39 @@ export function SidebarEditor() {
           onToggle={() => handleToggle('personal')}
         />
 
-        {sortedSections.map((section) => (
-          <SectionItem
-            key={section.id}
-            id={section.id as SectionId}
-            title={section.title}
-            isOpen={openSection === section.id}
-            onToggle={() => handleToggle(section.id as SectionId)}
-            onDragStart={() => handleDragStart(section.id)}
-            onDragOver={(e) => handleDragOver(e, section.id)}
-            onDragEnd={handleDragEnd}
-            onMouseDown={() => handleMouseDown(section.id)}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseLeave}
-            isDragging={isDragging}
-            isDragged={draggedItem === section.id}
-            isDraggable={true}
-            isVisible={section.visible}
-            onToggleVisibility={(e) => {
-              e.stopPropagation();
-              toggleSectionVisibility(section.id as SectionType);
-            }}
-            isCustom={section.isCustom}
-          />
+        {sortedSections.map((section, index) => (
+          <div key={section.id} className="flex items-start gap-2">
+            <div className="flex flex-col gap-1 pt-2">
+              <button
+                onClick={() => handleMoveUp(index)}
+                disabled={index === 0}
+                className="p-1 hover:bg-gray-100 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronUp className="w-4 h-4 text-gray-500" />
+              </button>
+              <button
+                onClick={() => handleMoveDown(index)}
+                disabled={index === sortedSections.length - 1}
+                className="p-1 hover:bg-gray-100 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              </button>
+            </div>
+            <div className="flex-1">
+              <SectionItem
+                id={section.id as SectionId}
+                title={section.title}
+                isOpen={openSection === section.id}
+                onToggle={() => handleToggle(section.id as SectionId)}
+                isVisible={section.visible}
+                onToggleVisibility={(e) => {
+                  e.stopPropagation();
+                  toggleSectionVisibility(section.id as SectionType);
+                }}
+                isCustom={section.isCustom}
+              />
+            </div>
+          </div>
         ))}
 
         <AddCustomSectionButton />
