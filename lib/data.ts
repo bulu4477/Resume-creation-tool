@@ -53,6 +53,9 @@ export const createEmptyProject = () => ({
   description: '',
   technologies: [],
   link: '',
+  startDate: '',
+  endDate: '',
+  current: false,
 });
 
 export const sampleResumeData: ResumeData = {

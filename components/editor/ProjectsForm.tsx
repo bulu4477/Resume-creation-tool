@@ -6,8 +6,10 @@ import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { Checkbox } from '@/components/ui/Checkbox';
 import RichTextEditor from './RichTextEditorWrapper';
 import { createEmptyProject } from '@/lib/data';
+import { formatDateRange } from '@/lib/utils';
 import { ChevronUp, ChevronDown, Trash2, ChevronDown as ChevronDownIcon } from 'lucide-react';
 
 export function ProjectsForm() {
@@ -35,7 +37,10 @@ export function ProjectsForm() {
   return (
     <div className="space-y-4">
       {data.projects.map((item, index) => (
-        <Card key={item.id} className="p-4">
+        <Card 
+          key={item.id} 
+          className="p-4"
+        >
           <div
             className="flex items-center justify-between cursor-pointer"
             onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
@@ -67,11 +72,16 @@ export function ProjectsForm() {
                 <h4 className="font-medium">
                   {item.name || `项目 ${index + 1}`}
                 </h4>
-                {item.technologies.length > 0 && (
-                  <p className="text-sm text-gray-500">
-                    {item.technologies.join(', ')}
-                  </p>
-                )}
+                <p className="text-sm text-gray-500">
+                  {item.technologies.length > 0 && (
+                    <span>{item.technologies.join(', ')}</span>
+                  )}
+                  {item.startDate && (
+                    <span className="ml-2">
+                      ({formatDateRange(item.startDate, item.endDate || '', item.current || false)})
+                    </span>
+                  )}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -131,6 +141,41 @@ export function ProjectsForm() {
                   }
                   placeholder="React, TypeScript, Node.js"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>开始时间</Label>
+                  <Input
+                    type="month"
+                    value={item.startDate || ''}
+                    onChange={(e) =>
+                      updateProject(item.id, { startDate: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>结束时间</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="month"
+                      value={item.endDate || ''}
+                      onChange={(e) =>
+                        updateProject(item.id, { endDate: e.target.value })
+                      }
+                      disabled={item.current}
+                    />
+                    <div className="flex items-center gap-1 whitespace-nowrap">
+                      <Checkbox
+                        checked={item.current || false}
+                        onCheckedChange={(checked) =>
+                          updateProject(item.id, { current: checked })
+                        }
+                      />
+                      <Label className="text-sm">进行中</Label>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="space-y-2">

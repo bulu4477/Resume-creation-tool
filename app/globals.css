@@ -170,6 +170,12 @@
   cursor: pointer;
 }
 
+/* 加深PDF和预览中的无序列表原点颜色 */
+.prose ul li::marker,
+.prose-sm ul li::marker {
+  color: #374151 !important;
+}
+
 /* 强制修复简历描述中的段落间距和行高 */
 .prose p,
 .prose-sm p {
@@ -182,3 +188,5 @@
 .prose-sm p + p {
   margin-top: 0.1rem !important;
 }
+
+

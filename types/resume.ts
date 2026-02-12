@@ -43,6 +43,9 @@ export interface Project {
   description: string;
   technologies: string[];
   link?: string;
+  startDate?: string;
+  endDate?: string;
+  current?: boolean;
 }
 
 export interface CustomSection {

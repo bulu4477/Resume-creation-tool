@@ -37,7 +37,11 @@ export function EducationForm() {
   return (
     <div className="space-y-4">
       {data.education.map((item, index) => (
-        <Card key={item.id} className="p-4">
+        <Card 
+          key={item.id} 
+          className="p-4"
+          draggable={false}
+        >
           <div
             className="flex items-center justify-between cursor-pointer"
             onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}

@@ -137,9 +137,16 @@ export function ClassicTemplate({ data, template, sectionOrder, pageSettings }: 
       </h2>
       {projects.length > 0 ? (
         projects.map((project) => (
-          <div key={project.id} className="mb-4" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
-            <h3 className="font-bold">{project.name || '项目名称'}</h3>
-            <div className="text-gray-600 mb-1 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: project.description }} />
+          <div key={project.id} className="mb-2" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
+            <div className="flex justify-between items-baseline">
+              <h3 className="font-bold">{project.name || '项目名称'}</h3>
+              {project.startDate && (
+                <span className="text-sm text-gray-600">
+                  {formatDateRange(project.startDate, project.endDate || '', project.current || false)}
+                </span>
+              )}
+            </div>
+            <div className="text-gray-600 mb-1 prose prose-sm" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: project.description }} />
             <p className="text-sm text-gray-500">
               技术栈: {project.technologies.join(', ')}
             </p>

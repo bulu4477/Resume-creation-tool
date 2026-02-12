@@ -47,7 +47,12 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
     ],
     content: content || '<p></p>',
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      let html = editor.getHTML();
+      // 移除末尾的空段落，避免列表后出现空白行
+      html = html.replace(/<p><\/p>$/g, '').trim();
+      // 如果内容完全为空，保留一个空段落
+      if (!html) html = '<p></p>';
+      onChange(html);
     },
     editorProps: {
       attributes: {

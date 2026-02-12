@@ -29,30 +29,30 @@ export function ProfessionalTemplate({ data, template, sectionOrder, pageSetting
       <h1 className="text-4xl font-bold mb-3">{personalInfo.fullName || '姓名'}</h1>
       <div className="text-lg opacity-90 mb-4 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: personalInfo.summary || '<p>个人简介</p>' }} />
 
-      <div className="flex flex-wrap gap-4 text-sm opacity-80">
+      <div className="flex flex-wrap gap-4 text-sm opacity-80" style={{ lineHeight: '16px' }}>
         {personalInfo.email && (
-          <div className="flex items-center gap-1">
-            <Mail className="w-4 h-4" />
+          <span className="inline-flex items-center gap-1">
+            <Mail className="w-4 h-4 flex-shrink-0 relative" style={{ top: '1px' }} />
             <span>{personalInfo.email}</span>
-          </div>
+          </span>
         )}
         {personalInfo.phone && (
-          <div className="flex items-center gap-1">
-            <Phone className="w-4 h-4" />
+          <span className="inline-flex items-center gap-1">
+            <Phone className="w-4 h-4 flex-shrink-0 relative" style={{ top: '1px' }} />
             <span>{personalInfo.phone}</span>
-          </div>
+          </span>
         )}
         {personalInfo.location && (
-          <div className="flex items-center gap-1">
-            <MapPin className="w-4 h-4" />
+          <span className="inline-flex items-center gap-1">
+            <MapPin className="w-4 h-4 flex-shrink-0 relative" style={{ top: '1px' }} />
             <span>{personalInfo.location}</span>
-          </div>
+          </span>
         )}
         {personalInfo.linkedin && (
-          <div className="flex items-center gap-1">
-            <Linkedin className="w-4 h-4" />
+          <span className="inline-flex items-center gap-1">
+            <Linkedin className="w-4 h-4 flex-shrink-0 relative" style={{ top: '1px' }} />
             <span>{personalInfo.linkedin}</span>
-          </div>
+          </span>
         )}
       </div>
     </header>
@@ -149,9 +149,16 @@ export function ProfessionalTemplate({ data, template, sectionOrder, pageSetting
       </h2>
       {projects.length > 0 ? (
         projects.map((project) => (
-          <div key={project.id} className="mb-4" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
-            <h3 className="font-semibold" style={{ color: template.primaryColor }}>{project.name || '项目名称'}</h3>
-            <div className="text-gray-600 mb-1 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: project.description }} />
+          <div key={project.id} className="mb-2" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
+            <div className="flex justify-between items-start mb-1">
+              <h3 className="font-semibold" style={{ color: template.primaryColor }}>{project.name || '项目名称'}</h3>
+              {project.startDate && (
+                <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded">
+                  {formatDateRange(project.startDate, project.endDate || '', project.current || false)}
+                </span>
+              )}
+            </div>
+            <div className="text-gray-600 mb-1 prose prose-sm" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: project.description }} />
             <p className="text-xs text-gray-500">{project.technologies.join(' • ')}</p>
           </div>
         ))

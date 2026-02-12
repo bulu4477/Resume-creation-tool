@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useResumeStore } from '@/store/resumeStore';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -31,7 +31,10 @@ export function SkillsForm() {
   return (
     <div className="space-y-4">
       {data.skills.map((item, index) => (
-        <Card key={item.id} className="p-4">
+        <Card 
+          key={item.id} 
+          className="p-4"
+        >
           <div className="flex items-start gap-3">
             <div className="flex flex-col gap-1 pt-1">
               <button

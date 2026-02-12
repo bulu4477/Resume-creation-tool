@@ -31,42 +31,42 @@ export function ModernTemplate({ data, template, sectionOrder, pageSettings }: T
         dangerouslySetInnerHTML={{ __html: personalInfo.summary || '<p>个人简介</p>' }}
       />
 
-      <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+      <div className="flex flex-wrap gap-4 text-sm text-gray-600" style={{ lineHeight: '16px' }}>
         {personalInfo.email && (
-          <div className="flex items-center gap-1">
-            <Mail className="w-4 h-4" style={{ color: template.primaryColor }} />
+          <span className="inline-flex items-center gap-1">
+            <Mail className="w-4 h-4 flex-shrink-0 relative" style={{ color: template.primaryColor, top: '1px' }} />
             <span>{personalInfo.email}</span>
-          </div>
+          </span>
         )}
         {personalInfo.phone && (
-          <div className="flex items-center gap-1">
-            <Phone className="w-4 h-4" style={{ color: template.primaryColor }} />
+          <span className="inline-flex items-center gap-1">
+            <Phone className="w-4 h-4 flex-shrink-0 relative" style={{ color: template.primaryColor, top: '1px' }} />
             <span>{personalInfo.phone}</span>
-          </div>
+          </span>
         )}
         {personalInfo.location && (
-          <div className="flex items-center gap-1">
-            <MapPin className="w-4 h-4" style={{ color: template.primaryColor }} />
+          <span className="inline-flex items-center gap-1">
+            <MapPin className="w-4 h-4 flex-shrink-0 relative" style={{ color: template.primaryColor, top: '1px' }} />
             <span>{personalInfo.location}</span>
-          </div>
+          </span>
         )}
         {personalInfo.website && (
-          <div className="flex items-center gap-1">
-            <Globe className="w-4 h-4" style={{ color: template.primaryColor }} />
+          <span className="inline-flex items-center gap-1">
+            <Globe className="w-4 h-4 flex-shrink-0 relative" style={{ color: template.primaryColor, top: '1px' }} />
             <span>{personalInfo.website}</span>
-          </div>
+          </span>
         )}
         {personalInfo.linkedin && (
-          <div className="flex items-center gap-1">
-            <Linkedin className="w-4 h-4" style={{ color: template.primaryColor }} />
+          <span className="inline-flex items-center gap-1">
+            <Linkedin className="w-4 h-4 flex-shrink-0 relative" style={{ color: template.primaryColor, top: '1px' }} />
             <span>{personalInfo.linkedin}</span>
-          </div>
+          </span>
         )}
         {personalInfo.github && (
-          <div className="flex items-center gap-1">
-            <Github className="w-4 h-4" style={{ color: template.primaryColor }} />
+          <span className="inline-flex items-center gap-1">
+            <Github className="w-4 h-4 flex-shrink-0 relative" style={{ color: template.primaryColor, top: '1px' }} />
             <span>{personalInfo.github}</span>
-          </div>
+          </span>
         )}
       </div>
     </header>
@@ -159,16 +159,23 @@ export function ModernTemplate({ data, template, sectionOrder, pageSettings }: T
       </h2>
       {projects.length > 0 ? (
         projects.map((project) => (
-          <div key={project.id} className="mb-4" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
+          <div key={project.id} className="mb-2" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
             <div className="flex justify-between items-start mb-1">
-              <h3 className="font-semibold">{project.name || '项目名称'}</h3>
+              <div>
+                <h3 className="font-semibold">{project.name || '项目名称'}</h3>
+                {project.startDate && (
+                  <span className="text-xs text-gray-500">
+                    {formatDateRange(project.startDate, project.endDate || '', project.current || false)}
+                  </span>
+                )}
+              </div>
               {project.link && (
                 <a href={project.link} className="text-sm" style={{ color: template.primaryColor }}>
                   查看项目
                 </a>
               )}
             </div>
-            <div className="text-gray-600 mb-2 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: project.description }} />
+            <div className="text-gray-600 mb-2 prose prose-sm" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: project.description }} />
             <div className="flex flex-wrap gap-1">
               {project.technologies.map((tech, idx) => (
                 <span key={idx} className="text-xs text-gray-500">
