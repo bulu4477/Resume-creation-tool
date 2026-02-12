@@ -79,7 +79,7 @@ export function MinimalTemplate({ data, template, sectionOrder, pageSettings }: 
           <div key={edu.id} className="mb-3 text-sm" style={{ breakInside: 'avoid', pageBreakInside: 'avoid' }}>
             <p className="font-medium" style={{ fontSize: `${pageSettings.contentSize}px` }}>{edu.school || '学校'}</p>
             <p className="text-gray-600">{edu.degree}{edu.field && `, ${edu.field}`}</p>
-            {edu.description && <div className="text-gray-500 mt-1 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: edu.description }} />}
+            {edu.description && <div className="text-gray-500 mt-1 prose prose-sm" style={{ fontSize: `${pageSettings.contentSize}px` }} dangerouslySetInnerHTML={{ __html: edu.description }} />}
             <p className="text-gray-400 mt-1" style={{ fontSize: `${pageSettings.contentSize}px` }}>
               {formatDateRange(edu.startDate, edu.endDate, edu.current)}
             </p>

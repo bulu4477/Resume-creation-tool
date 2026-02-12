@@ -112,7 +112,7 @@ export function ModernTemplate({ data, template, sectionOrder, pageSettings }: T
               <div>
                 <h3 className="font-semibold">{edu.school || '学校'}</h3>
                 <p className="text-gray-700" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>{edu.degree} {edu.field && `- ${edu.field}`}</p>
-                {edu.description && <div className="text-gray-600 mt-1 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: edu.description }} />}
+                {edu.description && <div className="text-gray-600 mt-1 prose prose-sm" style={{ fontSize: `${pageSettings.contentSize}px` }} dangerouslySetInnerHTML={{ __html: edu.description }} />}
               </div>
               <span className="text-sm text-gray-500">
                 {formatDateRange(edu.startDate, edu.endDate, edu.current)}

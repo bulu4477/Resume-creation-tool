@@ -102,7 +102,7 @@ export function ProfessionalTemplate({ data, template, sectionOrder, pageSetting
               <div>
                 <h3 className="font-bold" style={{ color: template.primaryColor }}>{edu.school || '学校'}</h3>
                 <p className="text-gray-700" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }}>{edu.degree}{edu.field && ` - ${edu.field}`}</p>
-                {edu.description && <div className="text-gray-600 mt-1 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: edu.description }} />}
+                {edu.description && <div className="text-gray-600 mt-1 prose prose-sm" style={{ fontSize: `${pageSettings.contentSize}px` }} dangerouslySetInnerHTML={{ __html: edu.description }} />}
               </div>
               <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded">
                 {formatDateRange(edu.startDate, edu.endDate, edu.current)}

@@ -90,7 +90,7 @@ export function ClassicTemplate({ data, template, sectionOrder, pageSettings }: 
               <div>
                 <h3 className="font-bold">{edu.school || '学校'}</h3>
                 <p className="italic text-gray-700">{edu.degree}{edu.field && `, ${edu.field}`}</p>
-                {edu.description && <div className="text-gray-600 mt-1 prose prose-sm max-w-none" style={{ fontSize: `${pageSettings.contentSize}px`, lineHeight: pageSettings.lineHeight }} dangerouslySetInnerHTML={{ __html: edu.description }} />}
+                {edu.description && <div className="text-gray-600 mt-1 prose prose-sm" style={{ fontSize: `${pageSettings.contentSize}px` }} dangerouslySetInnerHTML={{ __html: edu.description }} />}
               </div>
               <span className="text-sm text-gray-600">
                 {formatDateRange(edu.startDate, edu.endDate, edu.current)}
